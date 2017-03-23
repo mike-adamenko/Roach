@@ -27,8 +27,8 @@ public abstract class BaseRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        if (mItems == null) {
-            return 0;
+        if (mItems == null || mItems.size() == 0) {
+            return 1;
         } else {
             return mItems.size();
         }
@@ -36,12 +36,19 @@ public abstract class BaseRecyclerViewAdapter
 
     @Override
     public int getItemViewType(int position) {
-        return mItems.get(position).getItemType();
+        if (mItems != null || mItems.size() == 0) {
+            return Empty.TYPE_EMPTY;
+        } else {
+            return mItems.get(position).getItemType();
+        }
     }
 
     @Override
     public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
+            case Empty.TYPE_EMPTY:
+                return new EmptyViewHolder(LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.item_empty, parent, false));
             case Header.TYPE_HEADER:
                 return new HeaderViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.item_header, parent, false));
@@ -58,7 +65,11 @@ public abstract class BaseRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(BaseViewHolder holder, int position) {
-        holder.bindItem(mItems.get(position));
+        if (getItemViewType(position) == Empty.TYPE_EMPTY) {
+            holder.bindItem(new Empty("You have no decks!", "Create a Deck", -1));
+        } else {
+            holder.bindItem(mItems.get(position));
+        }
     }
 
     public void addItem(RecyclerViewItem item) {
