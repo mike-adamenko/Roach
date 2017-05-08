@@ -24,6 +24,7 @@ import com.jamieadkins.gwent.BuildConfig;
 import com.jamieadkins.gwent.R;
 import com.jamieadkins.gwent.base.BaseCompletableObserver;
 import com.jamieadkins.gwent.base.BaseSingleObserver;
+import com.jamieadkins.gwent.base.RxFragment;
 import com.jamieadkins.gwent.base.SnackbarShower;
 import com.jamieadkins.gwent.card.LargeCardView;
 import com.jamieadkins.gwent.data.CardDetails;
@@ -34,13 +35,14 @@ import java.util.ArrayList;
 
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * Shows picture and details of a card.
  */
 
-public class DetailFragment extends Fragment implements DetailContract.View {
+public class DetailFragment extends RxFragment implements DetailContract.View {
     private static final String STATE_CARD_ID = "com.jamieadkins.gwent.cardid";
     private DetailContract.Presenter mDetailPresenter;
     private ImageView mCardPicture;
@@ -56,7 +58,7 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     private boolean mUseLowData = false;
 
-    private SingleObserver<RxDatabaseEvent<CardDetails>> mObserver =
+    private DisposableSingleObserver<RxDatabaseEvent<CardDetails>> mObserver =
             new BaseSingleObserver<RxDatabaseEvent<CardDetails>>() {
                 @Override
                 public void onSuccess(RxDatabaseEvent<CardDetails> value) {
@@ -202,10 +204,10 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     @Override
     public void onStart() {
         super.onStart();
-        mDetailPresenter.getCard(mCardId)
+        getDisposables().add(mDetailPresenter.getCard(mCardId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mObserver);
+                .subscribeWith(mObserver));
     }
 
     @Override

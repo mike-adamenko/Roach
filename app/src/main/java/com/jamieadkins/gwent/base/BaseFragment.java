@@ -34,7 +34,7 @@ import io.reactivex.Observer;
 /**
  * UI fragment that shows a list of the users decks.
  */
-public abstract class BaseFragment extends Fragment
+public abstract class BaseFragment extends RxFragment
         implements SwipeRefreshLayout.OnRefreshListener, CardFilterListener,
         FilterBottomSheetDialogFragment.FilterUiListener {
     private static final String STATE_CARD_FILTER = "com.jamieadkins.gwent.card.filter";
