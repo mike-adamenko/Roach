@@ -32,4 +32,22 @@ public class Header implements RecyclerViewItem {
     public boolean equals(Object obj) {
         return obj instanceof Header && ((Header) obj).mHeader.equals(mHeader);
     }
+
+    @Override
+    public boolean isSameAs(RecyclerViewItem other) {
+        return equals(other);
+    }
+
+    @Override
+    public boolean isContentsSameAs(RecyclerViewItem other, String locale) {
+        return equals(other);
+    }
+
+    @Override
+    public int compare(RecyclerViewItem other, String locale) {
+        if (other instanceof Header) {
+            return mHeader.compareTo(((Header) other).getHeader());
+        }
+        return 0;
+    }
 }

@@ -1,5 +1,6 @@
 package com.jamieadkins.commonutils.ui;
 
+import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -15,14 +16,34 @@ import java.util.List;
 
 public abstract class BaseRecyclerViewAdapter
         extends RecyclerView.Adapter<BaseViewHolder> {
-    private List<RecyclerViewItem> mItems;
+    private SortedList<RecyclerViewItem> mItems;
 
     public RecyclerViewItem getItemAt(int position) {
         return mItems.get(position);
     }
 
     public BaseRecyclerViewAdapter() {
-        mItems = new ArrayList<>();
+        mItems = new SortedList<>(RecyclerViewItem.class, new RecyclerViewItemSortedCallback("en-US") {
+            @Override
+            public void onInserted(int position, int count) {
+                notifyItemRangeChanged(position, count);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                notifyItemRangeRemoved(position, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                notifyItemMoved(fromPosition, toPosition);
+            }
+
+            @Override
+            public void onChanged(int position, int count) {
+                notifyItemRangeChanged(position, count);
+            }
+        });
     }
 
     @Override
@@ -62,49 +83,7 @@ public abstract class BaseRecyclerViewAdapter
     }
 
     public void addItem(RecyclerViewItem item) {
-        if (!mItems.contains(item)) {
-            mItems.add(item);
-            notifyItemInserted(mItems.size() - 1);
-        } else {
-            updateItem(item);
-        }
-    }
-
-    public void addItem(int position, RecyclerViewItem item) {
-        if (!mItems.contains(item)) {
-            mItems.add(position, item);
-            notifyItemInserted(position);
-        }
-    }
-
-    public void replaceItem(int position, RecyclerViewItem newItem) {
-        mItems.set(position, newItem);
-        notifyItemChanged(position);
-    }
-
-    public void updateItem(RecyclerViewItem updatedItem) {
-        int index = mItems.indexOf(updatedItem);
-        if (index != -1) {
-            replaceItem(index, updatedItem);
-        } else {
-            addItem(updatedItem);
-        }
-    }
-
-    public void removeItem(RecyclerViewItem itemToRemove) {
-        if (mItems.contains(itemToRemove)) {
-            int index = mItems.indexOf(itemToRemove);
-            removeItem(index);
-        }
-    }
-
-    public void removeItem(int index) {
-        mItems.remove(index);
-        notifyItemRemoved(index);
-    }
-
-    public boolean isAnItemAt(int index) {
-        return mItems.size() > index;
+        mItems.add(item);
     }
 
     public void clear() {
@@ -112,7 +91,7 @@ public abstract class BaseRecyclerViewAdapter
         notifyDataSetChanged();
     }
 
-    public List<RecyclerViewItem> getItems() {
+    public SortedList<RecyclerViewItem> getItems() {
         return mItems;
     }
 }

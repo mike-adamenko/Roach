@@ -6,4 +6,10 @@ package com.jamieadkins.commonutils.ui;
 
 public interface RecyclerViewItem {
     int getItemType();
+
+    boolean isSameAs(RecyclerViewItem other);
+
+    boolean isContentsSameAs(RecyclerViewItem other, String locale);
+
+    int compare(RecyclerViewItem other, String locale);
 }

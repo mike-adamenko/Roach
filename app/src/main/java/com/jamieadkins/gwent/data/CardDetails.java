@@ -241,4 +241,22 @@ public class CardDetails implements RecyclerViewItem {
             return GwentRecyclerViewAdapter.TYPE_CARD;
         }
     }
+
+    @Override
+    public boolean isSameAs(RecyclerViewItem other) {
+        return other instanceof CardDetails && ingameId.equals(((CardDetails) other).getIngameId());
+    }
+
+    @Override
+    public boolean isContentsSameAs(RecyclerViewItem other, String locale) {
+        return false;
+    }
+
+    @Override
+    public int compare(RecyclerViewItem other, String locale) {
+        if (other instanceof CardDetails) {
+            return name.get(locale).compareTo(((CardDetails) other).getName(locale));
+        }
+        return 0;
+    }
 }

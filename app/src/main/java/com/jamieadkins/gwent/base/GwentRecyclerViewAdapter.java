@@ -176,7 +176,7 @@ public class GwentRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                     @Override
                     public void onSuccess(Integer value) {
                         if (value != -1) {
-                            removeItem(value);
+                            //removeItem(value);
                         }
                     }
                 });

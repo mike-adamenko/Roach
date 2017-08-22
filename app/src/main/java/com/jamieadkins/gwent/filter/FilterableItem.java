@@ -34,4 +34,22 @@ public class FilterableItem implements RecyclerViewItem {
     public int getItemType() {
         return FilterRecyclerViewAdapter.TYPE_FILTER;
     }
+
+    @Override
+    public boolean isSameAs(RecyclerViewItem other) {
+        return equals(other);
+    }
+
+    @Override
+    public boolean isContentsSameAs(RecyclerViewItem other, String locale) {
+        return equals(other);
+    }
+
+    @Override
+    public int compare(RecyclerViewItem other, String locale) {
+        if (other instanceof FilterableItem) {
+            return mId.compareTo(((FilterableItem) other).getId());
+        }
+        return 0;
+    }
 }

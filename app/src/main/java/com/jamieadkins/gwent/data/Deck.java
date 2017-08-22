@@ -289,4 +289,25 @@ public class Deck implements RecyclerViewItem {
     public int getItemType() {
         return GwentRecyclerViewAdapter.TYPE_DECK;
     }
+
+    @Exclude
+    @Override
+    public boolean isSameAs(RecyclerViewItem other) {
+        return other instanceof Deck && id.equals(((Deck) other).getId());
+    }
+
+    @Exclude
+    @Override
+    public boolean isContentsSameAs(RecyclerViewItem other, String locale) {
+        return false;
+    }
+
+    @Exclude
+    @Override
+    public int compare(RecyclerViewItem other, String locale) {
+        if (other instanceof Deck) {
+            return name.compareTo(((Deck) other).getName());
+        }
+        return 0;
+    }
 }
